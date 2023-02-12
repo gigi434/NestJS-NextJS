@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    container_name: nextjs_container
+    ports:
+      # Next.js
+      - "8080:8080"
+    volumes:
+      - "./app/frontend:/home/node/nestjs-nextjs/frontend/app"
+    tty: true
+    stdin_open: true
+    platform: linux/arm64/v8
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    container_name: nestjs_container
+    ports:
+      # Nestjs
+      - "3005:3000"
+    volumes:
+      - "./app/backend:/home/node/nestjs-nextjs/backend/app"
+    tty: true
+    stdin_open: true
+    platform: linux/arm64/v8
