@@ -22,9 +22,33 @@ services:
     container_name: nestjs_container
     ports:
       # Nestjs
-      - "3005:3000"
+      - "3005:3005"
+      # prisma studio
+      - "5555:5555"
+    environment:
+      - DB_CONTAINER_NAME=${DB_CONTAINER_NAME}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PORT=${POSTGRES_PORT}
     volumes:
-      - "./app/backend:/home/node/nestjs-nextjs/backend/app"
+      - "./app/backend:/home/node/nestjs"
     tty: true
     stdin_open: true
     platform: linux/arm64/v8
+
+  db:
+    build:
+      context: .
+      dockerfile: docker/db/Dockerfile
+    container_name: postgres_container
+    ports:
+    # postgres
+    - "5432:5432"
+    environment:
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_PORT=$POSTGRES_PORT
+    platform: linux/arm64/v8
+    restart: always
