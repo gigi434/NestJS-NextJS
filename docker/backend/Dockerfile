@@ -1,14 +1,14 @@
 FROM node:18.3.0-slim
 
-ENV HOME=${HOME}
+ENV HOME=/home/node
 ENV APP_HOME="$HOME/nestjs"
 
-WORKDIR ${APP_HOME}
+WORKDIR $APP_HOME
 
 # https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#global-npm-dependencies
 # npmのグローバル設定
-ENV NPM_CONFIG_PREFIX=${HOME}/.npm-global
-ENV PATH=$PATH:${HOME}/.npm-global/bin
+ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
+ENV PATH=$PATH:/home/node/.npm-global/bin
 
 # NestJSをインストール時にgitが必要なためインストールする
 RUN apt-get update \

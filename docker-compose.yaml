@@ -10,7 +10,7 @@ services:
       # Next.js
       - "8080:8080"
     volumes:
-      - "./app/frontend:/home/node/nestjs-nextjs/frontend/app"
+      - "./app/frontend:/home/node/nextjs/frontend/app"
     tty: true
     stdin_open: true
     platform: linux/arm64/v8
