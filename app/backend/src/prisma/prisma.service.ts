@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PrismaClient } from '@prisma/client'
 
-// PrismaClientを継承することでDBにアクセスするメソッドを使用する
+// PrismaClientを継承することでDBにアクセスするメソッドが使えるようになる
 @Injectable()
 export class PrismaService extends PrismaClient {
   constructor(private readonly config: ConfigService) {

@@ -11,9 +11,11 @@ import * as csurf from 'csurf'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
-  app.useGlobalPipes(new ValidationPipe({ whitelist: false }))
+  // （class-validatorライブラリを使用して）バックエンド側のバリデーションを行うためにValidationPipeが必要である
+  // whitelist trueにすると、クライアントから受け取った不要な値を自動的に省く
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
   app.enableCors({
-    // JWTトークンを埋め込んだクッキーを用いてフロントエンドとバックエンドの通信をtrueにする
+    // JWTトークンを埋め込んだクッキーを用いてフロントエンドとバックエンドの通信をtrueにすることで異なるオリジン(protocolからポート番号まで)でも通信が行えるようにする
     credentials: true,
     // バックエンドへのアクセスを許可するフロントエンドのドメインを設定する
     origin: ['https://nextjs_container:8080'],
