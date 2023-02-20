@@ -31,6 +31,11 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     })
   }
 
+  /**
+   * 認証が必要なAPIにアクセスした際に自動的に実行される関数オブジェクト
+   * @param payload
+   * @return user
+   */
   async validate(payload: { sub: number; email: string }) {
     const user = await this.prisma.user.findUnique({
       where: {

@@ -17,6 +17,15 @@ import { Csrf, Msg } from './interfaces/auth.interface'
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  /**
+   * 認証に必要なCSRFトークンを生成しCookieとしてHTTPリクエストヘッダに埋め込む関数オブジェクト
+   * @param req
+   */
+  @Get('/csrf')
+  getCsrfToken(@Req() req: Request): Csrf {
+    return { csrfToken: req.csrfToken() }
+  }
+
   // BodyデコレーターでHTTPリクエストボディに存在するデータを取得する
   @Post('signup')
   signUp(@Body() dto: AuthDto): Promise<Msg> {
@@ -41,7 +50,7 @@ export class AuthController {
       // JavascriptのDocument.cookie APIを使用できなくする。そのため、XSS攻撃を防御できる
       httpOnly: true,
       // samSiteをnoneにする場合はhttpではなくhttpsで通信する必要があるためsecureをtrueにするが、POSTMANによる開発中のためfalseにする
-      secure: false,
+      secure: process.env.NODE_ENV == 'production' ? true : false,
       // ChromeであるとCSRF対策でPOSTメソッドで認証してもCookieが設定できない。
       // そのため、SameSiteがデフォルトのlaxからnoneにすることでCookieが設定できるようにする
       sameSite: 'none',
@@ -61,7 +70,7 @@ export class AuthController {
     // アクセストークンの内容を空にする
     res.cookie('access_token', '', {
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV == 'production' ? true : false,
       sameSite: 'none',
       path: '/',
     })

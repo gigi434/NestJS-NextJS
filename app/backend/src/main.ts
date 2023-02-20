@@ -28,6 +28,31 @@ async function bootstrap() {
   })
   // フロントエンドから受け取ったクッキーを分解する
   app.use(cookieParser())
-  await app.listen(3005)
+
+  // csurfライブラリの動き
+  // 1. /auth/csrfにGETメソッドでリクエストを送るとcsurfライブラリによりCookieに共通鍵、リクエストヘッダにCSRFトークンが設定される
+  // 例） 共通鍵: YiVxisTRHOEolXwzxq_wX19L CSRFトークン: k0Khncbt-M8C6ROJRGw6c9UpJlpqvf2HD4Qks
+  // 2. 以降POST, PUT, PATCHメソッドなどのメソッドを実行しようとすると、csurfライブラリがリクエストヘッダから共通鍵を取り出しハッシュ関数を通して
+  // CSRFトークンを生成し、CookieのCSRFとの検証を行う。
+  // 3. 正規のCSRFトークンであるなら、登録したオリジンから送られてきたリクエストと判断する。
+
+  // レスポンスにCSRFトークンと共通鍵をcookieに埋め込む設定を行う
+  app.use(
+    csurf({
+      // Cookieに共通鍵を埋め込む際の設定
+      cookie: {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: process.env.NODE_ENV == 'production' ? true : false,
+      },
+      // リクエストがあると、HTTPリクエストヘッダにある共通鍵を受け取り、ライブラリで共通鍵からハッシュ関数を通してCSRFトークンを生成する
+      // その後、Cookieに存在するCSRFトークンと先ほど生成されたCSRFトークンを比較して検証することで、正規のサイト（Next.js）から送信されたHTTPリクエストであると判断できる
+      value: (req: Request) => {
+        return req.header('csrf-token')
+      },
+    }),
+  )
+
+  await app.listen(process.env.PORT || 3005)
 }
 bootstrap()
