@@ -14,7 +14,8 @@ ENV PATH=$PATH:/home/node/.npm-global/bin
 RUN apt-get update \
     && apt-get install -y git \
     && npm i -g @nestjs/cli \
-    && npm i -g prisma
+    && npm i -g prisma \
+    && apt-get install -y procps
 
 # 共有ディレクトリの権限をnodeで777に設定する
 RUN chown -R node:node ${HOME}
