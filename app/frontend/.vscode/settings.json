@@ -1,0 +1,12 @@
+{
+  // ファイル保存時にprettierによる自動フォーマットを実行するか
+  "editor.formatOnSave": true,
+  // デフォルトのフォーマッタをprettierに設定する
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // エディターがフォーカスを失うとファイルが自動的に保存される
+  "files.autoSave": "onFocusChange",
+  // ファイル保存時にESLintによる自動フォーマットを実行するか
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  }
+}

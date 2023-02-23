@@ -50,7 +50,7 @@ export class AuthController {
       // JavascriptのDocument.cookie APIを使用できなくする。そのため、XSS攻撃を防御できる
       httpOnly: true,
       // samSiteをnoneにする場合はhttpではなくhttpsで通信する必要があるためsecureをtrueにするが、POSTMANによる開発中のためfalseにする
-      secure: process.env.NODE_ENV == 'production' ? true : false,
+      secure: true,
       // ChromeであるとCSRF対策でPOSTメソッドで認証してもCookieが設定できない。
       // そのため、SameSiteがデフォルトのlaxからnoneにすることでCookieが設定できるようにする
       sameSite: 'none',
@@ -70,7 +70,7 @@ export class AuthController {
     // アクセストークンの内容を空にする
     res.cookie('access_token', '', {
       httpOnly: true,
-      secure: process.env.NODE_ENV == 'production' ? true : false,
+      secure: true,
       sameSite: 'none',
       path: '/',
     })

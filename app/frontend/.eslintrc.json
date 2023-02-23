@@ -1,0 +1,31 @@
+{
+  "root": true,
+  // ルールの追加やルールのオプションの拡張を指定する
+  "extends": [
+    "next",
+    // Next.js公式ドキュメントによると、
+    // "next/core-web-vitals"は、Next.jsの基本ESLint設定＋より厳密なルールセット(Core Web Vitals rule-set)を含んでいます。
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    // prettierのルールを最終的に適用するため最後に記述すること
+    "prettier",
+    "pretteir/@typescript-eslint"
+  ],
+  // サードパーティ製のルールを指定する。パッケージのインストールが必要である。
+  "plugins": [
+    "eslint-plugin-import",
+    "eslint-plugin-prettier",
+    "@typescript-eslint"
+  ],
+  // ルールの上書きや追加ルールの設定を指定する ex.)'ルール名': 'off'
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "import/order": [2, { "alphabetize": { "order": "asc" } }],
+    "prettier/prettier": ["error"]
+  }
+}

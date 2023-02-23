@@ -43,7 +43,7 @@ async function bootstrap() {
       cookie: {
         httpOnly: true,
         sameSite: 'none',
-        secure: process.env.NODE_ENV == 'production' ? true : false,
+        secure: true,
       },
       // リクエストがあると、HTTPリクエストヘッダにある共通鍵を受け取り、ライブラリで共通鍵からハッシュ関数を通してCSRFトークンを生成する
       // その後、Cookieに存在するCSRFトークンと先ほど生成されたCSRFトークンを比較して検証することで、正規のサイト（Next.js）から送信されたHTTPリクエストであると判断できる
