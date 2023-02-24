@@ -47,12 +47,14 @@ export class AuthController {
     const jwt = await this.authService.login(dto)
     // CookieにJWTトークンを設定する
     res.cookie('access_token', jwt.accessToken, {
-      // JavascriptのDocument.cookie APIを使用できなくする。そのため、XSS攻撃を防御できる
+      // JavascriptのDocument.cookie APIを使用できなくする。
       httpOnly: true,
-      // samSiteをnoneにする場合はhttpではなくhttpsで通信する必要があるためsecureをtrueにするが、POSTMANによる開発中のためfalseにする
+      // sameSiteをnoneにする場合はhttpではなくhttpsで通信するしないとCookieを送信できない。
+      // そのためsecureをtrueにするが、POSTMANによる開発中はhttps通信で設定する機能はないためfalseにする
       secure: true,
-      // ChromeであるとCSRF対策でPOSTメソッドで認証してもCookieが設定できない。
-      // そのため、SameSiteがデフォルトのlaxからnoneにすることでCookieが設定できるようにする
+      // sameSiteはeTLD+1までの違いであれば同じドメインであると認識する範囲である。
+      // ChromeであるとCSRF対策でデフォルトでlaxに設定されており、samesiteでない限りPOST, PUT, PATCH等のメソッドで認証してもCookieがリクエストで設定できないため403エラーが起きる
+      // そのため、SameSiteをデフォルトのlaxからnoneにすることでCookieを設定できるようにする
       sameSite: 'none',
       path: '/',
     })

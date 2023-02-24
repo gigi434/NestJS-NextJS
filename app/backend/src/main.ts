@@ -30,10 +30,13 @@ async function bootstrap() {
   app.use(cookieParser())
 
   // csurfライブラリの動き
-  // 1. /auth/csrfにGETメソッドでリクエストを送るとcsurfライブラリによりCookieに共通鍵、リクエストヘッダにCSRFトークンが設定される
-  // 例） 共通鍵: YiVxisTRHOEolXwzxq_wX19L CSRFトークン: k0Khncbt-M8C6ROJRGw6c9UpJlpqvf2HD4Qks
-  // 2. 以降POST, PUT, PATCHメソッドなどのメソッドを実行しようとすると、csurfライブラリがリクエストヘッダから共通鍵を取り出しハッシュ関数を通して
-  // CSRFトークンを生成し、CookieのCSRFとの検証を行う。
+  // プロパティ名 | 説明                                  | 値例
+  // _csrf        CSRFトークンを生成する時に使用する共通鍵     YiVxisTRHOEolXwzxq_wX19L
+  // csrf-token   CSRFトークン                            tglAol2s-x2Za4lPXnApySjkHCeV03-OaSSs
+  // access_token 認証情報を格納するJWTトークン              eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoidXNlcjFAdGVzdC5jb20iLCJpYXQiOjE2NzcxOTI1OTcsImV4cCI6MTY3NzE5Mjg5N30.bEgeEwxnWeZDDttxjC5V1e_4KM0vMn58G5eltwYqDwM
+  // 1. HPにアクセスすると、/auth/csrfにGETメソッドでリクエストを送られ、csurfライブラリによりHTTPリクエストヘッダに_csrfと_csrfにハッシュ関数を通したcsrf-tokenが設定される
+  // 2. ログインフォームにてログインするなどしてPOST, PUT, PATCHなどのメソッドを実行しようとすると、csurfライブラリがリクエストヘッダから_csrfを取り出しハッシュ関数を通して
+  // CSRFトークンを生成し、リクエストヘッダのCookieのcsrf-tokenとの検証を行う。
   // 3. 正規のCSRFトークンであるなら、登録したオリジンから送られてきたリクエストと判断する。
 
   // レスポンスにCSRFトークンと共通鍵をcookieに埋め込む設定を行う
@@ -45,8 +48,6 @@ async function bootstrap() {
         sameSite: 'none',
         secure: true,
       },
-      // リクエストがあると、HTTPリクエストヘッダにある共通鍵を受け取り、ライブラリで共通鍵からハッシュ関数を通してCSRFトークンを生成する
-      // その後、Cookieに存在するCSRFトークンと先ほど生成されたCSRFトークンを比較して検証することで、正規のサイト（Next.js）から送信されたHTTPリクエストであると判断できる
       value: (req: Request) => {
         return req.header('csrf-token')
       },

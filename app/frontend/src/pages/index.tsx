@@ -15,8 +15,9 @@ import {
   Alert,
 } from '@mantine/core'
 import { useForm, yupResolver } from '@mantine/form'
-import Layout from '@/components/layout'
-import { AuthForm } from 'types'
+import Layout from '@/components/Layout'
+import { AuthForm } from '@/types'
+import { Http2ServerRequest } from 'http2'
 
 // バリデーションのスキーマを定義する
 const schema = Yup.object().shape({
@@ -45,18 +46,22 @@ const Home = () => {
     try {
       // サインアップモードの場合はユーザーを作成する
       if (isRegister) {
-        await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_PATH}/auth/signup`),
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_API_BASE_PATH}/auth/signup`,
           {
             email: form.values.email,
             password: form.values.password,
-          }
+          },
+        )
       } else {
         // サインインモードの場合はサインインを行う
-        await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_PATH}/auth/signin`),
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_API_BASE_PATH}/auth/login`,
           {
             email: form.values.email,
             password: form.values.password,
-          }
+          },
+        )
       }
       form.reset()
       router.push('/dashboard')
