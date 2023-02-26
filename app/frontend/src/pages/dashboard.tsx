@@ -6,6 +6,8 @@ import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useQueryClient } from '@tanstack/react-query'
+import TaskForm from '@/components/TaskForm'
+import TaskList from '@/components/TaskList'
 
 const Dashboard: NextPage = () => {
   const router = useRouter()
@@ -13,7 +15,8 @@ const Dashboard: NextPage = () => {
 
   const logout = async () => {
     // ログアウトした後にuseQueryのキャッシュを削除する
-    queryClient.removeQueries(['user'])
+    // queryClient.removeQueries(['tasks'])
+    queryClient.removeQueries(['user, tasks'])
     await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_PATH}/auth/logout`)
     router.push('/')
   }
@@ -26,6 +29,8 @@ const Dashboard: NextPage = () => {
         onClick={logout}
       />
       <UserInfo />
+      <TaskForm />
+      <TaskList />
     </Layout>
   )
 }

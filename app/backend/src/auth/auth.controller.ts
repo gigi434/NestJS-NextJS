@@ -28,7 +28,7 @@ export class AuthController {
 
   // BodyデコレーターでHTTPリクエストボディに存在するデータを取得する
   @Post('signup')
-  signUp(@Body() dto: AuthDto): Promise<Msg> {
+  async signUp(@Body() dto: AuthDto): Promise<Msg> {
     return this.authService.signUp(dto)
   }
 

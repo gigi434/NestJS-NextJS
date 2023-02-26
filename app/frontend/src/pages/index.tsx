@@ -17,7 +17,6 @@ import {
 import { useForm, yupResolver } from '@mantine/form'
 import Layout from '@/components/Layout'
 import { AuthForm } from '@/types'
-import { Http2ServerRequest } from 'http2'
 
 // バリデーションのスキーマを定義する
 const schema = Yup.object().shape({
@@ -66,7 +65,7 @@ const Home = () => {
       form.reset()
       router.push('/dashboard')
     } catch (e: any) {
-      setError(e.response.data.message)
+      setError(e)
     }
   }
   return (

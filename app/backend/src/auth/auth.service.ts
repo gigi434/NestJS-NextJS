@@ -1,11 +1,11 @@
 import { Injectable, ForbiddenException } from '@nestjs/common'
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt'
 import { PrismaService } from '../prisma/prisma.service'
 import { AuthDto } from './dto/auth.dto'
 import { Msg, Jwt } from './interfaces/auth.interface'
+import { Prisma } from '@prisma/client'
 
 @Injectable()
 export class AuthService {
@@ -19,9 +19,7 @@ export class AuthService {
    * @param dto Emailとパスワードをプロパティとしたクラスオブジェクト
    */
   async signUp(dto: AuthDto): Promise<Msg> {
-    // クライアントリクエストから受け取ったパスワードからハッシュ値を得る
     const hashed = await bcrypt.hash(dto.password, 12)
-    // EmailとパスワードでDBにユーザーレコードを作成する
     try {
       await this.prisma.user.create({
         data: {
@@ -33,12 +31,12 @@ export class AuthService {
         message: 'ok',
       }
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
           throw new ForbiddenException('This email is already taken')
         }
-        // 上記以外のエラーは単純にエラーを投げるだけにする
       }
+      throw error
     }
   }
 

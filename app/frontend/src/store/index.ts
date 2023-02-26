@@ -2,7 +2,10 @@ import create from 'zustand'
 import { EditedTask } from '@/types'
 
 type State = {
+  // グローバルステート
   editedTask: EditedTask
+
+  // Reducer
   updateEditedTask: (payload: EditedTask) => void
   resetEditedTask: () => void
 }
