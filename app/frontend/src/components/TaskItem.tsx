@@ -4,9 +4,11 @@ import { Task } from '@prisma/client'
 import useStore from '../store'
 import useMutateTask from '@/hooks/useMutateTask'
 
-export default function TaskItem(
-  task: Omit<Task, 'createdAt' | 'updatedAt' | 'userId'>,
-) {
+export default function TaskItem({
+  id,
+  title,
+  description,
+}: Omit<Task, 'createdAt' | 'updatedAt' | 'userId'>) {
   const update = useStore((state) => state.updateEditedTask)
   const { deleteTaskMutation } = useMutateTask()
 
@@ -17,18 +19,20 @@ export default function TaskItem(
           className='mx-1 h-5 w-5 cursor-pointer text-blue-500'
           onClick={() => {
             update({
-              ...task,
+              id,
+              title,
+              description,
             })
           }}
         />
         <TrashIcon
           className='h-5 w-5 cursor-pointer text-blue-500'
           onClick={() => {
-            deleteTaskMutation.mutate(task.id)
+            deleteTaskMutation.mutate(id)
           }}
         />
       </div>
-      <span>{task.title}</span>
+      <span>{title}</span>
     </List.Item>
   )
 }

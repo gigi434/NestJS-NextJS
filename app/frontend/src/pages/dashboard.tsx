@@ -15,8 +15,8 @@ const Dashboard: NextPage = () => {
 
   const logout = async () => {
     // ログアウトした後にuseQueryのキャッシュを削除する
-    // queryClient.removeQueries(['tasks'])
-    queryClient.removeQueries(['user, tasks'])
+    queryClient.removeQueries(['tasks'])
+    queryClient.removeQueries(['user'])
     await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_PATH}/auth/logout`)
     router.push('/')
   }
@@ -36,13 +36,3 @@ const Dashboard: NextPage = () => {
 }
 
 export default Dashboard
-
-// 注意　下記はNextPageという型であるオブジェクトを返す関数オブジェクトになるため、エラーが発生する
-//  Dashboard(): NextPage {
-//   const router = useRouter()
-//   const logout = async () => {
-//     await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_PATH}/auth/logout`)
-//     router.push('/')
-//   }
-//   return <Layout title='dashboard'>dashboard</Layout>
-// }

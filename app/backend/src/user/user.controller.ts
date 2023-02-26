@@ -12,7 +12,7 @@ export class UserController {
   // JWTを使用してユーザー情報の認証を行う場合、Cookieを使用するやシークレットキーが何であるかをオプションとして設定するために、ストラテジーファイルを用いる
 
   @Get()
-  getLoginUser(@Req() req: Request): Omit<User, 'hashedPassword'> {
+  async getLoginUser(@Req() req: Request): Promise<Omit<User, 'hashedPassword'>> {
     // もともとhashedPasswordプロパティがないレスポンスを返しているため、リクエストには含まれない
     // そのため、リクエストのExpressのユーザーモデルとスキーマで定義したユーザーモデルで競合が起きてしまい、次のエラーが発生する。
     // 型 'User' には 型 'Omit<User, "hashedPassword">' からの次のプロパティがありません: id, createdAt, updatedAt, email, nickName
@@ -21,10 +21,10 @@ export class UserController {
   }
 
   @Patch()
-  updateUser(
+  async updateUser(
     @Req() req: Request,
     @Body() dto: UpdateUserDto,
   ): Promise<Omit<User, 'hashedPassword'>> {
-    return this.userService.updateUser(req.user.id, dto)
+    return await this.userService.updateUser(req.user.id, dto)
   }
 }

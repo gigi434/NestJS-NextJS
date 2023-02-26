@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt'
 import { PrismaService } from '../prisma/prisma.service'
 import { AuthDto } from './dto/auth.dto'
 import { Msg, Jwt } from './interfaces/auth.interface'
-import { Prisma } from '@prisma/client'
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 
 @Injectable()
 export class AuthService {
@@ -18,20 +18,18 @@ export class AuthService {
    * サインアップ関数オブジェクト
    * @param dto Emailとパスワードをプロパティとしたクラスオブジェクト
    */
-  async signUp(dto: AuthDto): Promise<Msg> {
+  async signUp(dto: AuthDto): Promise<Jwt> {
     const hashed = await bcrypt.hash(dto.password, 12)
     try {
-      await this.prisma.user.create({
+      const user = await this.prisma.user.create({
         data: {
           email: dto.email,
           hashedPassword: hashed,
         },
       })
-      return {
-        message: 'ok',
-      }
+      return this.generateJwt(user.id, user.email)
     } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
           throw new ForbiddenException('This email is already taken')
         }

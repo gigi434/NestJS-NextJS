@@ -8,7 +8,7 @@
       "type": "node",
       "request": "attach",
       "name": "プログラムの起動",
-      "port": 9229,
+      "port": 3005,
       "skipFiles": ["<node_internals>/**"]
     }
   ]

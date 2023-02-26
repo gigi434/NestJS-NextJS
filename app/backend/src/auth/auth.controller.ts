@@ -28,8 +28,22 @@ export class AuthController {
 
   // BodyデコレーターでHTTPリクエストボディに存在するデータを取得する
   @Post('signup')
-  async signUp(@Body() dto: AuthDto): Promise<Msg> {
-    return this.authService.signUp(dto)
+  async signUp(
+    @Body() dto: AuthDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<Msg> {
+    const jwt = await this.authService.signUp(dto)
+    // JWTトークンを生成する
+    res.cookie('access_token', jwt.accessToken, {
+      // CookieにJWTトークンを設定する
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+    })
+    return {
+      message: 'ok',
+    }
   }
 
   // NestJSではHTTPステータスがPOSTメソッドは201、それ以外全て201で返されてしまう

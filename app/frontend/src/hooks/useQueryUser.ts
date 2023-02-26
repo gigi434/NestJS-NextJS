@@ -22,8 +22,9 @@ const useQueryUser = () => {
     onError: (err: any) => {
       // 認証されていないユーザー(JWTトークンの認証期限切れとか)がアクセスしている
       // または権限がないのに認証が必要なページにアクセスする場合はホームページに遷移する
-      if (err.response.status === 401 || err.response.status === 403)
+      if (err.response.status === 401 || err.response.status === 403) {
         router.push('/')
+      }
     },
   })
 }
